@@ -16,6 +16,8 @@ Sapi的全称是Server Application Programming Interface，也就是服务端应
 
 5. ISAPI（Internet Server Application Program Interface）（在PHP5.3以后，PHP不再有ISAPI模式）
 
+与PHP交互数据的外部程序主要有Apache、Nginx、IIS等web服务器。
+
 二、 CGI模式介绍
 
 ![CGI模式](./imgs/2018_05_10_001.png)
@@ -95,6 +97,8 @@ Fastcig是cgi的升级版，Cgi和fastcgi工作模式大抵相同，但fastcgi�
 
 
 七、 总结
+
+![Lamp](./imgs/2018_05_10_005.jpg)
 
 主流的 PHP 运行模式如下所示：
 

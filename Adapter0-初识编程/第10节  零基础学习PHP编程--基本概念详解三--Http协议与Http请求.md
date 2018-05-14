@@ -8,3 +8,6 @@ HTTP协议详解以及URL具体访问过程   http://www.cnblogs.com/phpstudy201
 
 
 一次完整的HTTP请求过程   https://blog.csdn.net/yezitoo/article/details/78193794
+
+
+关于HTTP协议，一篇就够了   https://www.cnblogs.com/ranyonsue/p/5984001.html

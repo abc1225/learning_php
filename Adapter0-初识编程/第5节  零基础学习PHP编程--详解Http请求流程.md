@@ -15,22 +15,24 @@
 
 在浏览器中输入http://www.test.com/test.php ，访问服务器上的一个叫test.php的文件，文件内容如下：
 
-<?php
-			echo "Hello，world！";
-?>
+    <?php
+    			echo "Hello，world！";
+    ?>
 
 正常访问完成后，会在浏览器中看到Hello，world！，参与该过程的主要有以下5个对象：
 1. 浏览器（Http客户端），2. 本地DNS解析服务， 3. DNS服务器， 4. Web服务器（httpd、nginx等），5. PHP解释器
 
 访问的整个流程如下所示：
 
-1. 浏览器解析URL中的域名，获取服务器的IP地址和端口号
-2. 浏览器与Web服务器建立连接，构造Http请求Request，向Web服务器发送生成的Http请求
-3. Web服务器接收到请求后，解析Http请求Request，并调用PHP解释器执行相应的操作
-4. PHP解释器解析相应的脚本内容，并将结果返回给Web服务器
-5. Web服务器将收到的内容生成Http响应Response，并返回给浏览器
-6 浏览器接收到Http请求的响应Response，将页面内容HTML展示出来
-7. 浏览器发送请求获取嵌入在HTML中的资源
+	1. 浏览器解析URL中的域名，获取服务器的IP地址和端口号
+	2. 浏览器与Web服务器建立连接，构造Http请求Request，向Web服务器发送生成的Http请求
+	3. Web服务器接收到请求后，解析Http请求Request，并调用PHP解释器执行相应的操作
+	4. PHP解释器解析相应的脚本内容，并将结果返回给Web服务器
+	5. Web服务器将收到的内容生成Http响应Response，并返回给浏览器
+	6. 浏览器接收到Http请求的响应Response，将页面内容HTML展示出来
+	7. 浏览器发送请求获取嵌入在HTML中的资源
+
+![Http请求流程](./imgs/2018_05_14_x_001.jpg)
 
 
 一、浏览器解析URL中的域名，获取服务器的IP地址和端口号
@@ -57,19 +59,19 @@
 
 下面是HTTP请求参数：
 
-开始行：  
-GET /test.php HTTP/1.1
-
-请求头：
-Host: www.test.com
-Connection: keep-alive
-Upgrade-Insecure-Requests: 1
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 SE 2.X MetaSr 1.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
-Accept-Encoding: gzip, deflate, sdch, br
-Accept-Language: zh-CN,zh;q=0.8
-
-无请求正文
+	开始行：  
+	GET /test.php HTTP/1.1
+	
+	请求头：
+	Host: www.test.com
+	Connection: keep-alive
+	Upgrade-Insecure-Requests: 1
+	User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 SE 2.X MetaSr 1.0
+	Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+	Accept-Encoding: gzip, deflate, sdch, br
+	Accept-Language: zh-CN,zh;q=0.8
+	
+	无请求正文
 
 
 三. Web服务器接收到请求后，解析Http请求Request，并调用PHP解释器执行相应的操作
@@ -91,13 +93,11 @@ Web服务器获取PHP解释器返回的结果，并将结果封装成Http响应R
 
 七、 浏览器发送请求获取嵌入在HTML中的资源
 
-如果HTML标签中包含其他的超链接，如图片、音频、视频、CSS、JS等等，浏览器会发送一个获取请求来重新获得这些文件。比如我要获取外图片，CSS，JS文件等，类似于下面的链接：
+如果HTML标签中包含其他的超链接，如图片、音频、视频、CSS、JS等等，浏览器会发送一个获取请求来重新获得这些文件，比如需要获取外图片，CSS，JS文件等，类似于下面的链接：
 
-图片：http://www.test.com/imgs/test.jpeg
-
-CSS式样表：http://www.test.com/css/test.css
-
-JavaScript 文件：http://www.test.com/js/test.js
+	图片文件：			http://www.test.com/imgs/test.jpeg
+	CSS式样表：			http://www.test.com/css/test.css
+	JavaScript 文件：	http://www.test.com/js/test.js
 
 这些地址都要经历一个和访问PHP文件读取类似的过程，浏览器会在DNS中查找这些域名，发送请求，由于访问的都是静态文件，Web服务器不会再调用PHP解释器去干活了，而是直接读取访问的静态文件，并将该文件返回给浏览器。
 

@@ -2,6 +2,49 @@
 
 
 
+弄清楚Apache、PHP和MySQL之间的关系，对于初学者理解程序的运行过程，还是很有帮助的，学习一个新事物，要明白最基本的三个问题： 是什么、有什么、为什么，是什么指的是新事物的宏观层面的功能描述，比如学习Apache，Apache是什么？就是一个能提供Http服务的Web服务器。有什么指的是微观层面的具体功能细节，比如Apache有什么？Apache有虚拟主机功能，有不同的工作模式（MPM模式），还有日志功能，还有各种功能模块等等。为什么指的是对事物的联系和重组，这一层是对事物本质的认识有了新的理解，Apache为什么？为什么需要使用Apache，我能不能使用其它事物来替代他。
+
+
+
+先明白一下几个定义：
+
+
+PHP是后端编程语言,MySQL是数据库.
+
+PHP和MySQL都是LAMP(Linux+Apache+MySQL+PHP)组合里的核心成员.
+Linux上也有很多开发者用Nginx替代Apache配合PHP-FPM提供服务.
+
+PHP跟MySQL的关系相当亲密,PHP从5.4开始就内置实现了MySQL驱动(mysqlnd).也就是说MySQL驱动是PHP主干代码的一部分.configure配置编译时可以直接指定mysqlnd,取代MySQL官方的libmysql:
+php-src/ext/mysqlnd
+--with-mysql=mysqlnd
+--with-mysqli=mysqlnd
+--with-pdo-mysql=mysqlnd
+
+对比PHP添加PostgreSQL驱动:
+sudo apt-get install libpq-dev
+--with-pgsql=/usr/bin/pg_config
+--with-pdo-pgsql=/usr/bin/pg_config
+可见需要先安装PostgreSQL开发库.
+
+PHP添加Oracle支持也跟PostgreSQL类似,需要先安装Oracle开发包(Oracle Instant Client):
+Oracle Instant Client需要从Oracle官网下载.
+--with-oci8=shared,instantclient,/usr/lib/oracle/11.2/client/lib
+--with-pdo-oci=shared,instantclient,/usr/lib/oracle,11.2
+
+PHP跟另一款数据库SQLite也相当亲密,因为PHP直接内置了SQLite引擎.
+--with-sqlite3 默认启用
+--with-pdo-sqlite 默认启用
+
+另外,PHP从5.4开始也内置了一个单进程的用于测试和开发的HTTP服务器:
+php -S localhost:8080 -t /www
+执行上述命令即可建立一台监听8080端口,网站根目录为/www的,支持PHP编程和SQLite存储的HTTP服务器.
+这个PHP内置的服务器相当的轻巧省资源(RES内存占用约为5MB),跑在Android手机里也不一点不费劲.
+
+关于PHP和MySQL之间的关系解释起来很简短，但是他们之间大有用处，编写程序一点都离不开它们
+
+
+
+
 
 现在PHP已经是广为流行的一种编程语言，而使用PHP程序就需要搭建一个PHP的运行环境，搭建PHP本地环境就是PHP+Apache+Mysql的环境，这样就可以在电脑中运行PHP程序。那么，对于PHP环境中apache、php、mysql三者之间到底是什么样的关系呢？
 Apache

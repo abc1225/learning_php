@@ -129,6 +129,15 @@ Nginx 和 Apache充当Web服务器时所扮演的角色是不一样的，Nginx�
 
 参考
 
+CGI、FastCGI和PHP-FPM关系图解    https://www.awaimai.com/371.html
+
+mod_php对比mod_fastcgi    https://www.jianshu.com/p/88682dc61ec4
+
+
+[好文]mod_php和mod_fastcgi和php-fpm的介绍,对比,和性能数据    https://wenku.baidu.com/view/887de969561252d380eb6e92.html
+
+
+
 深入理解Zend SAPIs(Zend SAPI Internals) http://www.laruence.com/2008/08/12/180.html
 
 图解PHP的几种运行模式   https://blog.csdn.net/smm188/article/details/54743671

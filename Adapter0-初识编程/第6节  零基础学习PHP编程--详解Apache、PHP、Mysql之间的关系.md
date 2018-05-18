@@ -1,108 +1,52 @@
 # 详解Apache、PHP和Mysql之间的关系 #
 
+----------
 
 
-弄清楚Apache、PHP和MySQL之间的关系，对于初学者理解程序的运行过程，还是很有帮助的，学习一个新事物，要明白最基本的三个问题： 是什么、有什么、为什么，是什么指的是新事物的宏观层面的功能描述，比如学习Apache，Apache是什么？就是一个能提供Http服务的Web服务器。有什么指的是微观层面的具体功能细节，比如Apache有什么？Apache有虚拟主机功能，有不同的工作模式（MPM模式），还有日志功能，还有各种功能模块等等。为什么指的是对事物的联系和重组，这一层是对事物本质的认识有了新的理解，Apache为什么？为什么需要使用Apache，我能不能使用其它事物来替代他。
+## 学习方法 ##
 
-
-
-先明白一下几个定义：
-
-
-PHP是后端编程语言,MySQL是数据库.
-
-PHP和MySQL都是LAMP(Linux+Apache+MySQL+PHP)组合里的核心成员.
-Linux上也有很多开发者用Nginx替代Apache配合PHP-FPM提供服务.
-
-PHP跟MySQL的关系相当亲密,PHP从5.4开始就内置实现了MySQL驱动(mysqlnd).也就是说MySQL驱动是PHP主干代码的一部分.configure配置编译时可以直接指定mysqlnd,取代MySQL官方的libmysql:
-php-src/ext/mysqlnd
---with-mysql=mysqlnd
---with-mysqli=mysqlnd
---with-pdo-mysql=mysqlnd
-
-对比PHP添加PostgreSQL驱动:
-sudo apt-get install libpq-dev
---with-pgsql=/usr/bin/pg_config
---with-pdo-pgsql=/usr/bin/pg_config
-可见需要先安装PostgreSQL开发库.
-
-PHP添加Oracle支持也跟PostgreSQL类似,需要先安装Oracle开发包(Oracle Instant Client):
-Oracle Instant Client需要从Oracle官网下载.
---with-oci8=shared,instantclient,/usr/lib/oracle/11.2/client/lib
---with-pdo-oci=shared,instantclient,/usr/lib/oracle,11.2
-
-PHP跟另一款数据库SQLite也相当亲密,因为PHP直接内置了SQLite引擎.
---with-sqlite3 默认启用
---with-pdo-sqlite 默认启用
-
-另外,PHP从5.4开始也内置了一个单进程的用于测试和开发的HTTP服务器:
-php -S localhost:8080 -t /www
-执行上述命令即可建立一台监听8080端口,网站根目录为/www的,支持PHP编程和SQLite存储的HTTP服务器.
-这个PHP内置的服务器相当的轻巧省资源(RES内存占用约为5MB),跑在Android手机里也不一点不费劲.
-
-关于PHP和MySQL之间的关系解释起来很简短，但是他们之间大有用处，编写程序一点都离不开它们
+弄清楚Apache、PHP和MySQL之间的关系，对于初学者理解程序的运行过程，还是很有帮助的，学习一个新事物，要明白最基本的三个问题： 是什么、有什么、为什么，是什么指的是新事物的宏观层面的功能描述，比如学习Apache，Apache是什么？就是一个能提供Http服务的Web服务器。有什么指的是微观层面的具体功能细节，Apache有什么？Apache有虚拟主机功能，有不同的工作模式（MPM模式），有日志功能，有压缩功能，还有各种功能模块等等。为什么指的是对事物的联系和重组，这一层是对事物本质的认识有了新的理解，Apache为什么？为什么需要使用Apache？什么场景下适合使用Apache？什么场景又不适合使用？能否使用其它Web服务器来替代它？Apache能调用PHP解释器工作，那能否和其它的脚本解释器一起工作？等等。
 
 
 
+## Apache、PHP和Mysql的基本理解 ##
+
+Apache是一个Web服务器： 基于Http/Https/Websocket等协议对外部提供数据、文件的获取功能
+
+PHP是可编程的脚本语言： 提供基本的运算和逻辑处理的功能，可以很好的应用于Web网站功能需求的开发
+
+MySQL是一种关系型数据库： 用于存储、修改、获取和管理数据的工具，可以通过结构化查询语言（SQL）进行数据库的管理
 
 
-现在PHP已经是广为流行的一种编程语言，而使用PHP程序就需要搭建一个PHP的运行环境，搭建PHP本地环境就是PHP+Apache+Mysql的环境，这样就可以在电脑中运行PHP程序。那么，对于PHP环境中apache、php、mysql三者之间到底是什么样的关系呢？
-Apache
+## Apache和PHP之间的关系 ##
 
-它是web 服务器软件。同类产品有微软的IIS等。功能是让某台电脑可以提供 www服务，本地环境下可以通过127.0.0.1这个IP来访问本地网站。
+![Http请求流程](./imgs/2018_05_18_x_001.png)
 
-PHP
+Apache和PHP解释器之间的关系，是调用和被调用之间的关系，Apache主动调用PHP解释器去执行PHP脚本文件，PHP解释器被Apache调用。
 
-它是服务端语言解释软件。由apache软件加载以后，使apache增加解释php文件的功能，以便这台服务器可以运行php程序。访问方法如下:
+Apache是web服务器软件，它可以接受来自客户端的Http/Https等协议的请求，当请求的文件是PHP脚本文件时，它会调用PHP解释器去解释和执行该脚本中的内容，并将解释器返回的结果，根据对应的协议规则封装成相应格式的数据，再将数据返回给请求的客户端。
 
-地址/文件名.php。
-
-MYSQL
-
-它是小型关系数据库软件。它为各种软件提供数据库支持，php站点保存的数据一般都存在 MYSQL 数据库里。当然，你也可以选择其他数据库，不一定只是MYSQL，只是通常MYSQL和PHP之间的“关系”非常好。
-
-注:该php文件必须在 apache 配置的工作目录中。不是安装目录。
-
-dreamweaver 可视化网页编辑软件。可以用来编写大部的网站脚本程序。例如 HTML CSS ASP PHP 等。但是它仅局限于编辑代码。为可视部份提供可视化编辑。并不能运行服务端动态脚本程序，例如 ASP PHP 等需要服务端解释才能运行的网页程序。。
-
-补充说明:如果只是从编写代码的角度而言。系统自带的记事本都可以写。不一定非得用 dreamweaver 。它用来编写 CSS HTML 还不错。写 PHP 的话就和拿记事本写没啥两样。。反正看不到运行后的效果。。
-PHP环境:一台运行了 apache 的电脑，并且该 apache 已经加载了 php 。数据库不是必装软件。如果你不需要数据库可以不装。版本号不重要。新版的功能多一点。安全性好一点。
-
-这就是php、apache、mysql三者之间的关系，了解了他们之间的关系之后，学PHP就会更容易哦。
+PHP究竟是如何被Apache调用的，可以参看第四节的《详解PHP的运行模式Sapi》，或者下一节的《详解Apache的MPM及采用的PHP模式》
 
 
+## PHP和MySql之间的关系 ##
+
+PHP和Mysql之间的关系，也是调用和被调用的关系，PHP通过SQL语言调用Mysql进行数据库的管理功能，Mysql数据库总是被动的接受操作指令。
+
+MYSQL是小型关系数据库软件，它为可以各种软件提供数据库支持，通过PHP可以操作Mysql，同理使用其它语言也可以操作Mysql，同样PHP也可以操作其他的数据库，不一定是MYSQL。
+
+PHP如何调用Mysql数据库进行操作？ PHP与Mysql交互使用的语言规则是SQL，但是PHP和Mysql是两个独立的应用程序，想要交互必须得先建立连接，就如同浏览器访问Web服务器一样，在请求数据发送之前也需要先成功建立tcp连接。PHP脚本与Mysql建立连接的过程都是由PHP的Mysqld/PDO等驱动来完成的，这些驱动的本质都是PHP的模块，即PHP解释器可以识别的相关函数集合，一般使用C语言编写，对PHP语言来说，屏蔽了具体连接建立和数据库协议操作的详细过程，对PHP语言暴露了一些基础的接口，即PHP可以调用到的一些数据库操作函数，如连接数据库、执行数据库SQL命令、断开连接等。
+
+总而言之，PHP调用Mysql数据库的过程，通常是通过PHP的数据库驱动模块来操作的，它的本质也是一个网络数据的请求操作（遵循MySql通信协议来建立连接和SQL语法来执行具体操作指令）。
 
 
+## Apache、PHP和Mysql的运行环境 ##
+
+使用PHP程序就需要先搭建一个PHP的运行环境，PHP运行环境就是包含PHP+Apache+Mysql这三个软件的环境，还需要满足的条件就是，Apache可以调用PHP解释器来执行PHP脚本，PHP可以连接Mysql数据库来操作和管理存储的数据，当满足以上两个条件时，Apache、PHP和Mysql的运行环境就是一个完整的PHP运行环境了。
 
 
+## 参考 ##
 
+详解php与mysql的关系   https://blog.csdn.net/liuxuan12417/article/details/53125399
 
-
-
-
-
-
-
-CGI、FastCGI和PHP-FPM关系图解    https://www.awaimai.com/371.html
-
-mod_php对比mod_fastcgi    https://www.jianshu.com/p/88682dc61ec4
-
-
-[好文]mod_php和mod_fastcgi和php-fpm的介绍,对比,和性能数据    https://wenku.baidu.com/view/887de969561252d380eb6e92.html
-
-
-
-【导航篇】从输入域名到展示网页，我们都做了什么？  https://www.90.cx/init-website/
-
-
-HTTP协议详解以及URL具体访问过程  http://www.cnblogs.com/phpstudy2015-6/p/6810130.html
-
-
-http服务详解（1）——一次完整的http服务请求处理过程   https://www.cnblogs.com/along21/p/7691234.html
-
-
-
-一次完整的HTTP请求过程   https://blog.csdn.net/yezitoo/article/details/78193794
-
-
-一次完整的HTTP事务过程分析   https://blog.csdn.net/xianymo/article/details/46785391
+简述apache,php,mysql三者的关系    https://www.cnblogs.com/zhengwk/p/5806715.html
